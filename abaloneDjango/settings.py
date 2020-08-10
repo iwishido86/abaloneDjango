@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authentication',  # 추가
+    'abaloneDjango',  # 추가
     'rest_framework',  # 추가
     'rest_framework.authtoken',  # 추가
 ]
