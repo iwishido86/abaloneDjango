@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
+
+from abaloneDjango.views import registration_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/auth/register/', registration_view, name='register_user'), # 추가
+    path('api/auth/login/', obtain_auth_token, name='login'), # 추가
+
+
+
 ]

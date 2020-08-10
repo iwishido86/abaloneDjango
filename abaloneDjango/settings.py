@@ -25,7 +25,7 @@ SECRET_KEY = 'kqtkh=@^mzr_(8h4b*9f$9n7=h7)lv9ss88h*pt^t&yjpig(zs'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authentication',  # 추가
+    'rest_framework',  # 추가
+    'rest_framework.authtoken',  # 추가
 ]
 
 MIDDLEWARE = [
@@ -118,3 +121,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+# ... 처음이시면 위치에 신경 쓸 필요 없고
+# ... settings.py에 있기만 해도 됩니다.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+# ...
