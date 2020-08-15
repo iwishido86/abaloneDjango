@@ -18,6 +18,16 @@ class Board(models.Model):
     content = models.TextField()
     write_date = models.DateTimeField(auto_now_add=True)
 
+
 class Knight(models.Model):
+    knightId = models.IntegerField(default=0, help_text="카드번호")
     name = models.CharField(max_length=30)
     evlYn = models.CharField(max_length=1)
+
+
+class User(models.Model):
+    username = models.CharField(max_length=30,unique=True)
+    joinYn = models.CharField(max_length=1)
+    assinKnightId = models.IntegerField(default=0, help_text="지정카드")
+
+    

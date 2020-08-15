@@ -1,0 +1,29 @@
+{# knight_login.html #}
+{% extends 'abaloneDjango/base.html' %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    {{ username }} 님 환영합니다
+
+    {% for knight in knightlist %}
+         {{ knight.name }}
+    {% endfor %}
+
+   <table class="table">
+    <tbody>
+        <tr>
+            {% for knight in knightlist.all %}
+                <td scope="row">{{ knight.name }}</td>
+                {% if knight.knightId|divisibleby:3 != 0 %}
+                    <tr></tr>
+                {% endif %}
+            {% endfor %}
+        </tr>
+       </tbody>
+     </table>
+
+
+    <input type="submit" value="Submit" />
+</form>
+{% endblock body %}
