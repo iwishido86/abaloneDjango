@@ -15,6 +15,20 @@ def knight_select_view(request, username):
 
     if request.method == 'POST':
         form = KnightSelectForm(request.POST)
+
+        user, created = User.objects.get_or_create(
+            username=form.cleaned_data['username']
+        )
+
+        user.username = form.cleaned_data['username']
+        user.readyYn = 'Y'
+
+        user.save()
+
+        return HttpResponseRedirect(
+            '/knight_select/' % form.cleaned_data['username']
+        )
+
     else:
         form = KnightSelectForm()
         form.fields['username'].initial = username
@@ -46,6 +60,7 @@ def knight_login_view(request):
 
             user.username = form.cleaned_data['username']
             user.joinYn = 'Y'
+            user.readyYn = 'N'
             user.assinKnightId = 0
 
             user.save()

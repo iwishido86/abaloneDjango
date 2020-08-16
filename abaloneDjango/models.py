@@ -28,6 +28,7 @@ class Knight(models.Model):
 class User(models.Model):
     username = models.CharField(max_length=30,unique=True)
     joinYn = models.CharField(max_length=1)
+    readyYn = models.CharField(default='N',max_length=1)
     assinKnightId = models.IntegerField(default=0, help_text="지정카드")
 
     
