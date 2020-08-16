@@ -1,12 +1,50 @@
 {# knight_login.html #}
-{% extends 'abaloneDjango/base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .card{
+            border-color: #9d9d00;
+            background-color: #9d9d9d;
+            vertical-align: middle;
+            line-height: 100px;
+            margin: 20px auto 20px auto;
+        }
+    </style>
 
-{% block body %}
-<script type="text/javascript">
+    <script type="text/javascript">
     function selectKnight(knightId){
-        alert(knightId);
+        //alert(knightId);
+
+        if ( knightId.border == 0 ){
+            knightId.border = 5;
+        }
+        else{
+            knightId.border = 0;
+        }
+
     }
-</script>
+
+    function submitFrom(){
+        //alert(knightId);
+        var knightliststr = "";
+        var cardlist = document.getElementsByClassName("card");
+        for( var i = 0; i < cardlist.length ; i ++ ){
+            if ( cardlist[i].border == 5 ){
+                knightliststr = knightliststr + ( i+1 ) + ";";
+            }
+        }
+        id_knightliststr.value = knightliststr;
+        document.forms[0].submit();
+    }
+    </script>
+
+
+</head>
+<body>
+
 <form method="post">
     {% csrf_token %}
     {{ username }} 님 환영합니다
@@ -18,10 +56,9 @@
         <tr>
             {% for knight in knightlist.all %}
                 <td scope="row">
-                    http://127.0.0.1:8000/img/{{ knight.knightId }}.jpg
-                    <img src="http://127.0.0.1:8000/img/{{ knight.knightId }}.jpg"  name="knightImg{{ knight.knightId }}" border="0" href='javascript:selectKnight( knightImg{{ knight.knightId }} );'>
-
-                    {{ knight.name }}
+                    {% load static %}
+                    <img class="card" src="{% static  knight.knightId %}.jpg"  name="knightImg{{ knight.knightId }}" border="0" onclick="selectKnight( knightImg{{ knight.knightId }} )">
+                    <BR>{{ knight.name }}
                 </td>
 
                 {% if knight.knightId|divisibleby:3 != 0 %}
@@ -33,6 +70,7 @@
      </table>
 
 
-    <input type="submit" value="Submit" />
+    <input onclick="submitFrom();" value="원정시작" type="button"/>
 </form>
-{% endblock body %}
+</body>
+</html>

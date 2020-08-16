@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
 from abaloneDjango.views import base_view, knight_login_view, knight_select_view, knight_auto_view
@@ -31,10 +33,4 @@ urlpatterns = [
     path('knight_select/<str:username>/', knight_select_view, name='knight_select_view'), # 추가
     path('img/', knight_select_view),
 
-
-
-
-
-
-
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
