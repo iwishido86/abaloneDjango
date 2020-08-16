@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('knight_select/', knight_select_view),
     path('knight_select/<str:username>/', knight_select_view, name='knight_select_view'), # 추가
+    path('img/', knight_select_view),
 
 
 

@@ -5,18 +5,25 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from .forms import UserLoginForm
+from .forms import UserLoginForm, KnightSelectForm
 from .models import Board, Knight, User
 from .serializers import RegistrationUserSerializer
 
 
 def knight_select_view(request, username):
     template_name = 'abaloneDjango/knight_select.html'
-    knightlist = Knight.objects.all()
-    context = {
-        'username':username,
-        'knightlist': knightlist
-    }
+
+    if request.method == 'POST':
+        form = KnightSelectForm(request.POST)
+    else:
+        form = KnightSelectForm()
+        form.fields['username'].initial = username
+        knightlist = Knight.objects.all()
+        context = {
+            'form': form,
+            'knightlist': knightlist
+        }
+
     return render(request, template_name, context)
 
 
