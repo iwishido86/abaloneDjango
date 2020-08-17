@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'abaloneDjango',  # 추가
+
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
