@@ -17,6 +17,8 @@ python manage.py createsuperuser
 
 python manage.py makemigrations abaloneDjango
 python manage.py migrate
-python manage.py runserver
+python3 manage.py runserver
+
+ec2-18-223-117-95.us-east-2.compute.amazonaws.com
 
 pip install httpie
