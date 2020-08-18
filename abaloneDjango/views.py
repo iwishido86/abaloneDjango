@@ -15,10 +15,10 @@ from .serializers import RegistrationUserSerializer
 
 def knight_select_view(request, username):
     template_name = 'abaloneDjango/knight_select.html'
-    print('11111')
+    #print('11111')
     if request.method == 'POST':
         form = KnightSelectForm(request.POST)
-        print ('2222')
+        #print ('2222')
 
         username = request.POST.get('username')
 
@@ -38,12 +38,12 @@ def knight_select_view(request, username):
 
         knightliststr = request.POST.get('knightliststr')
 
-        print('2222'+knightliststr+'2222')
+        #print('2222'+knightliststr+'2222')
 
         knightlist = knightliststr.split(';')
 
         for knightId in knightlist :
-            print(knightId)
+            #print(knightId)
             if knightId == '':
                 break
 
@@ -194,36 +194,36 @@ def assin_view(request):
 
         q = Q(knightId=i)
         q.add(~assineduserq ,q.AND)
-        print('index::::' + i.__str__()+ '::'+ q.__str__())
+        #print('index::::' + i.__str__()+ '::'+ q.__str__())
 
         selectknightlist = SelectKnight.objects.filter(q)
 
-        for selectknight in selectknightlist:
-            print(selectknight.username + selectknight.knightId.__str__() )
+        #for selectknight in selectknightlist:
+            #print(selectknight.username + selectknight.knightId.__str__() )
 
         selectknightcnt = weight * selectknightlist.count()
 
         assinnum = randint(1,joinusercnt + selectknightcnt +1 - i)
-        print('index::::' + i.__str__() + '::assinnum:'+ assinnum.__str__()+ '::selectknightcnt:'+ selectknightcnt.__str__()+ '::joinusercnt:'+ joinusercnt.__str__()+ ':::'+ ( ((assinnum-1)/3).__int__()+1).__str__())
+        #print('index::::' + i.__str__() + '::assinnum:'+ assinnum.__str__()+ '::selectknightcnt:'+ selectknightcnt.__str__()+ '::joinusercnt:'+ joinusercnt.__str__()+ ':::'+ ( ((assinnum-1)/3).__int__()+1).__str__())
 
         if assinnum <= selectknightcnt:
-            print('111::(assinnum - selectknightcnt-1):' + ( (assinnum-1)/weight).__int__().__str__())
+            #print('111::(assinnum - selectknightcnt-1):' + ( (assinnum-1)/weight).__int__().__str__())
             assinedusername = selectknightlist[ ( (assinnum-1)/weight).__int__()].username
-            print('111:' + selectknightlist.__str__())
+            #print('111:' + selectknightlist.__str__())
 
         else:
             unassineduserlist = User.objects.filter(Q(joinYn='Y') & Q(assinKnightId=0))
-            print('222::(assinnum - selectknightcnt-1):' + (
-                        assinnum - selectknightcnt - 1).__str__())
+            #print('222::(assinnum - selectknightcnt-1):' + (
+            #            assinnum - selectknightcnt - 1).__str__())
             assinedusername = unassineduserlist[(assinnum - selectknightcnt-1)].username
-            print('222:' + assinedusername)
+            #print('222:' + assinedusername)
 
         user = get_object_or_404(User, username=assinedusername)
         user.assinKnightId = i
         user.save()
 
         assineduserq.add( Q(username=assinedusername) , assineduserq.OR)
-        print(assineduserq.__str__())
+        #print(assineduserq.__str__())
 
     return HttpResponseRedirect('/start/' )
 
