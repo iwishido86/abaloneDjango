@@ -49,7 +49,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form.username.value }}님 환영합니다.</BR>
-    원하는 캐릭터를 골라주세요.
+    카드를 고르고 원정을 시작하세요 ->  <input onclick="submitFrom();" value="원정시작" type="button" width="100%"/>
     {{ form.as_p }}
 
    <table class="table">
@@ -70,8 +70,6 @@
        </tbody>
      </table>
 
-
-    <input onclick="submitFrom();" value="원정시작" type="button" width="100%"/>
 </form>
 </body>
 </html>
