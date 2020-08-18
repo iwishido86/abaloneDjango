@@ -56,7 +56,7 @@
             {% for knight in knightlist.all %}
                 <td scope="row">
                     {% load static %}
-                    <img class="card" src="{% static  knight.knightId %}.jpg"  name="knightImg{{ knight.knightId }}" border="0" onclick="selectKnight( knightImg{{ knight.knightId }} )">
+                    <img class="card" src="{% static  knight.knightId %}.JPG"  name="knightImg{{ knight.knightId }}" border="0" onclick="selectKnight( knightImg{{ knight.knightId }} )">
                     <BR>{{ knight.name }}
                 </td>
 
