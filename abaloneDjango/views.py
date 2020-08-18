@@ -6,28 +6,50 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .forms import UserLoginForm, KnightSelectForm
-from .models import Board, Knight, User
+from .models import Board, Knight, User, SelectKnight
 from .serializers import RegistrationUserSerializer
 
 
 def knight_select_view(request, username):
     template_name = 'abaloneDjango/knight_select.html'
-
+    print('11111')
     if request.method == 'POST':
         form = KnightSelectForm(request.POST)
+        print ('2222')
+        if form.is_valid():
+            username = form.cleaned_data['username']
 
-        user, created = User.objects.get_or_create(
-            username=form.cleaned_data['username']
-        )
+            user, created = User.objects.get_or_create(
+                username=username
+            )
 
-        user.username = form.cleaned_data['username']
-        user.readyYn = 'Y'
+            user.username = username
+            user.readyYn = 'Y'
 
-        user.save()
+            user.save()
 
-        return HttpResponseRedirect(
-            '/knight_select/' % form.cleaned_data['username']
-        )
+            delSelectKnightList = SelectKnight.objects.filter(username=username)
+
+            delSelectKnightList.delete()
+
+            knightliststr = form.cleaned_data['knightliststr']
+
+            knightlist = knightliststr.split(';')
+
+            for knightId in knightlist :
+                print(knightId)
+                if knightId == '':
+                    break
+
+                selectKnight, created = SelectKnight.objects.get_or_create(
+                    username=form.cleaned_data['username'],
+                    knightId=knightId
+                )
+                selectKnight.save()
+
+            return HttpResponseRedirect(
+                '/knight_select/%s' % username
+            )
 
     else:
         form = KnightSelectForm()
@@ -90,3 +112,47 @@ def knight_auto_view(request,username):
     return HttpResponseRedirect(
         '/knight_select/%s' % username
     )
+
+
+def start_view(request):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.all()  # 추가
+    context = {
+        'userlist': userlist  # 추가
+    }
+    return render(request, template_name, context)
+
+
+def assin_view(request):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.all()  # 추가
+    context = {
+        'userlist': userlist  # 추가
+    }
+    return HttpResponseRedirect(
+        '/knight_select/%s'
+    )
+
+
+def delete_view(request):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.all()  # 추가
+    context = {
+        'userlist': userlist  # 추가
+    }
+    return HttpResponseRedirect(
+        '/knight_select/%s'
+    )
+
+
+def join_view(request):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.all()  # 추가
+    context = {
+        'userlist': userlist  # 추가
+    }
+    return render(request, template_name, context)

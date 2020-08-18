@@ -6,6 +6,7 @@
     <title>Document</title>
     <style>
         .card{
+            width : 200px;
             border-color: #9d9d00;
             background-color: #9d9d9d;
             vertical-align: middle;
@@ -47,8 +48,6 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ username }} 님 환영합니다
-
     {{ form.as_p }} 님 환영합니다
 
    <table class="table">

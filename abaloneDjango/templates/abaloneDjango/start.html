@@ -1,0 +1,24 @@
+{# knight_login.html #}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+
+    <script type="text/javascript">
+
+    </script>
+
+
+</head>
+<body>
+{% for user in userlist %}
+    {{ user.username }}<a href="{% url 'join_view' %}">참가</a><a href="{% url 'delete_view' username=username %}">삭제</a>
+{% endfor %}
+
+
+</body>
+</html>

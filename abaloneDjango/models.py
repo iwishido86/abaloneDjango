@@ -20,7 +20,7 @@ class Board(models.Model):
 
 
 class Knight(models.Model):
-    knightId = models.IntegerField(default=0, help_text="카드번호")
+    knightId = models.IntegerField(default=0, help_text="카드번호",unique=True)
     name = models.CharField(max_length=30)
     evlYn = models.CharField(max_length=1)
 
@@ -31,4 +31,15 @@ class User(models.Model):
     readyYn = models.CharField(default='N',max_length=1)
     assinKnightId = models.IntegerField(default=0, help_text="지정카드")
 
-    
+
+class SelectKnight(models.Model):
+    username = models.CharField(max_length=30)
+    knightId = models.IntegerField(default=0, help_text="카드번호")
+
+
+
+class User(models.Model):
+    username = models.CharField(max_length=30,unique=True)
+    joinYn = models.CharField(max_length=1)
+    readyYn = models.CharField(default='N',max_length=1)
+    assinKnightId = models.IntegerField(default=0, help_text="지정카드")
