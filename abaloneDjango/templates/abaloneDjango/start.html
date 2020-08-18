@@ -31,7 +31,7 @@
     </tr>
 {% for user in userlist %}
     <tr>
-        <td>{{ user.username }} [ {{ user.assinKnightId }} ]</td>
+        <td>{{ user.username }} [ <font color="white">{{ user.assinKnightId }}</font> ]</td>
         <td>{{ user.joinYn }}</td>
         <td>{{ user.readyYn }}</td>
         <td><a href="{% url 'join_view' username=user.username %}">참가</a></td>
