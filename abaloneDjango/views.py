@@ -150,6 +150,15 @@ def mycard_view(request,username):
 
         cardinfo = '멀린 or 모르가나 : '+ cardinfostr
 
+    elif user.assinKnightId in [5,6,7]: # 모드레드
+        userlist = User.objects.filter(assinKnightId__in=[5,6,7])
+
+        for userinfo in userlist:
+            cardinfostr = cardinfostr + '[' + userinfo.username + '] '
+
+        cardinfo = '악의 하수인들 : '+ cardinfostr
+
+
     context = {
         'username': username,  # 추가
         'assinknightid': user.assinKnightId,  # 추가
