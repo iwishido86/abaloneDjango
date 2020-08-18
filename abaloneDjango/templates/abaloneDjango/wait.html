@@ -1,0 +1,40 @@
+{# knight_login.html #}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        td{
+            border-color: #9d9d00;
+            border-size: 2px;
+            vertical-align: middle;
+            margin: 5px auto 5px auto;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var timer = setInterval("timer_procedure();",5000);
+
+        function timer_procedure(){
+            document.location.href = "{% url 'mycard_view' username=username %}";
+        }
+    </script>
+
+
+</head>
+<body>
+{% load static %}
+원정 준비중 ...    원정 리더가 원정을 시작하면 카드가 배정됩니다.
+<a href="{% url 'mycard_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
+</BR>
+참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
+</BR>
+원정 리더로 접속해서 원정 시작하기 ->
+<input onclick="location.href={% url 'start_view' %};return false;" value="원정리더" type="button" width="100%"/>
+</BR>
+카드선택 화면으로 돌아가기 ->
+<a href="{% url 'knight_select_view' username=username %}"><input  value="카드선택" type="button" width="100%"/></a>
+
+</body>
+</html>

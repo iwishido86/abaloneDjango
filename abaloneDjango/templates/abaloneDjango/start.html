@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-
+        td{
+            border-color: #9d9d00;
+            border-size: 2px;
+            vertical-align: middle;
+            margin: 5px auto 5px auto;
+        }
     </style>
 
     <script type="text/javascript">
@@ -15,10 +20,27 @@
 
 </head>
 <body>
+참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
+<table>
+    <tr>
+        <td width="200">참가자명</td>
+        <td width="100">참가여부</td>
+        <td width="100">준비완료</td>
+        <td width="50">참가</td>
+        <td width="50">삭제</td>
+    </tr>
 {% for user in userlist %}
-    {{ user.username }}<a href="{% url 'join_view' %}">참가</a><a href="{% url 'delete_view' username=username %}">삭제</a>
+    <tr>
+        <td>{{ user.username }} [ {{ user.assinKnightId }} ]</td>
+        <td>{{ user.joinYn }}</td>
+        <td>{{ user.readyYn }}</td>
+        <td><a href="{% url 'join_view' username=user.username %}">참가</a></td>
+        <td><a href="{% url 'delete_view' username=user.username %}">삭제</a></td>
+    </tr>
 {% endfor %}
-
-
+</table>
+<input onclick="location.href={% url 'assin_view' %};return false;" value="원정시작" type="button" width="100%"/>
+<input onclick="location.href={% url 'init_view' %};return false;" value="초기화" type="button" width="100%"/>
+<input onclick="location.href={% url 'start_view' %};return false;" value="새로고침" type="button" width="100%"/>
 </body>
 </html>

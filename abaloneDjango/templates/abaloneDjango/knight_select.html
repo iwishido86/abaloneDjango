@@ -6,12 +6,12 @@
     <title>Document</title>
     <style>
         .card{
-            width : 200px;
+            width : 100px;
             border-color: #9d9d00;
             background-color: #9d9d9d;
             vertical-align: middle;
             line-height: 100px;
-            margin: 20px auto 20px auto;
+            margin: 5px auto 5px auto;
         }
     </style>
 
@@ -48,7 +48,9 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }} 님 환영합니다
+    {{ form.username.value }}님 환영합니다.</BR>
+    원하는 캐릭터를 골라주세요.
+    {{ form.as_p }}
 
    <table class="table">
     <tbody>
@@ -57,7 +59,7 @@
                 <td scope="row">
                     {% load static %}
                     <img class="card" src="{% static  knight.knightId %}.JPG"  name="knightImg{{ knight.knightId }}" border="0" onclick="selectKnight( knightImg{{ knight.knightId }} )">
-                    <BR>{{ knight.name }}
+                    <!--BR>{{ knight.name }}<-->
                 </td>
 
                 {% if knight.knightId|divisibleby:3 != 0 %}
@@ -69,7 +71,7 @@
      </table>
 
 
-    <input onclick="submitFrom();" value="원정시작" type="button"/>
+    <input onclick="submitFrom();" value="원정시작" type="button" width="100%"/>
 </form>
 </body>
 </html>

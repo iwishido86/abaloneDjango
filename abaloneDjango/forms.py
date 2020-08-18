@@ -20,10 +20,10 @@ class UserLoginForm(forms.Form):
 class KnightSelectForm(forms.Form):
     username = forms.CharField(
         label='이름',
-        widget=forms.TextInput(attrs={'size': 30}),
+        widget=forms.HiddenInput(attrs={'size': 30}),
         #disabled=True
     )
     knightliststr = forms.CharField(
         label='선택기사목록',
-        widget=forms.TextInput(attrs={'size': 30})
+        widget=forms.HiddenInput(attrs={'size': 30})
     )

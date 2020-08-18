@@ -79,6 +79,7 @@ sqlite3 --version
 http://ec2-18-223-102-218.us-east-2.compute.amazonaws.com
 
 http://ec2-18-223-102-218.us-east-2.compute.amazonaws.com:8000/
+http://ec2-18-223-102-218.us-east-2.compute.amazonaws.com:8000/knight_ligin/경진
 
 
 1. python manage.py runserver 명령어로 서버를 실행시킨다.
