@@ -63,7 +63,8 @@ def knight_select_view(request, username):
         knightlist = Knight.objects.filter(~Q(knightId=9)).order_by('knightId')
         context = {
             'form': form,
-            'knightlist': knightlist
+            'username':username,
+            'knightlist': knightlist,
         }
 
     return render(request, template_name, context)

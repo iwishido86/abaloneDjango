@@ -23,19 +23,21 @@
 참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
 <table>
     <tr>
-        <td width="200">참가자명</td>
+        <td width="150">참가자명</td>
         <td width="100">참가여부</td>
         <td width="100">준비완료</td>
         <td width="50">참가</td>
         <td width="50">삭제</td>
+        <td width="70">로그인</td>
     </tr>
 {% for user in userlist %}
     <tr>
-        <td>{{ user.username }} [ <font color="white">{{ user.assinKnightId }}</font> ]</td>
+        <td>{{ user.username }} [ <font color="white">{{ user.assinKnightId }}</font></td>
         <td>{{ user.joinYn }}</td>
         <td>{{ user.readyYn }}</td>
         <td><a href="{% url 'join_view' username=user.username %}">참가</a></td>
         <td><a href="{% url 'delete_view' username=user.username %}">삭제</a></td>
+        <td><a href="{% url 'knight_select_view' username=user.username %}">로그인</a></td>
     </tr>
 {% endfor %}
 </table>

@@ -14,7 +14,7 @@
     </style>
 
     <script type="text/javascript">
-        var timer = setInterval("timer_procedure();",5000);
+        //var timer = setInterval("timer_procedure();",5000);
 
         function timer_procedure(){
             document.location.href = "{% url 'mycard_view' username=username %}";
@@ -24,16 +24,13 @@
 
 </head>
 <body>
+{% include "./top_menu.html" %}
 {% load static %}
+당신의 역할 :
 <a href="{% url 'mycard_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
-</BR>
-카드선택 화면으로 돌아가기 ->
-<a href="{% url 'knight_select_view' username=username %}"><input  value="카드선택" type="button" width="100%"/></a>
 
 </BR>
-당신의 역할 :
-</BR>
-<img class="card" src="{% static assinknightid %}.JPG"  name="knightImg{{ assinknightid }}" border="0">
+<img class="card" src="{% static assinknightid %}.JPG"  name="knightImg{{ assinknightid }}" border="0" width="300">
 </BR>
 <H3>{{cardinfo}} </H3>
 

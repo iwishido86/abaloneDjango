@@ -24,17 +24,17 @@
 
 </head>
 <body>
+{% include "./top_menu.html" %}
 {% load static %}
-원정 준비중 ...    원정 리더가 원정을 시작하면 카드가 배정됩니다.
+원정 준비중 ...
+</BR>
+원정 리더가 시작하면 카드가 배정됩니다.
+</BR>
+
 <a href="{% url 'mycard_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
 </BR>
 참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
 </BR>
-원정 리더로 접속해서 원정 시작하기 ->
-<input onclick="location.href={% url 'start_view' %};return false;" value="원정리더" type="button" width="100%"/>
-</BR>
-카드선택 화면으로 돌아가기 ->
-<a href="{% url 'knight_select_view' username=username %}"><input  value="카드선택" type="button" width="100%"/></a>
 
 </body>
 </html>
