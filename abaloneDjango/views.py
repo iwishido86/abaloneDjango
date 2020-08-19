@@ -189,7 +189,7 @@ def start_view(request):
 
 def assin_view(request):
     template_name = 'abaloneDjango/start.html'
-    weight = 3
+    weight = 5
     assinnum = 0
     userlist = User.objects.filter(joinYn='Y')
 
