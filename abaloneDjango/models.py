@@ -43,3 +43,27 @@ class User(models.Model):
     joinYn = models.CharField(max_length=1)
     readyYn = models.CharField(default='N',max_length=1)
     assinKnightId = models.IntegerField(default=0, help_text="지정카드")
+
+
+class Game(models.Model):
+    gameId = models.IntegerField(default=0, help_text="원정번호")
+    joinUserCnt = models.IntegerField(default=0, help_text="참여인수")
+    expeditionSeq = models.IntegerField(default=1, help_text="진행중회차")
+    completeYn = models.CharField(default='N', max_length=1)
+
+
+class Expedition(models.Model):
+    gameId = models.IntegerField(default=0, help_text="원정번호")
+    expeditionSeq = models.IntegerField(default=0, help_text="원정회차")
+    expeditionUserCnt = models.IntegerField(default=0, help_text="원정참여유저")
+    succUserCnt = models.IntegerField(default=0, help_text="원정참여유저")
+    succYn = models.CharField(default='N', max_length=1)
+    completeYn = models.CharField(default='N', max_length=1)
+    usernamelist = models.CharField(max_length=150)
+
+
+class Election(models.Model):
+    gameId = models.IntegerField(default=0, help_text="원정번호")
+    expeditionSeq = models.IntegerField(default=0, help_text="원정회차")
+    username = models.CharField(max_length=30)
+    succYn = models.CharField(default='N', max_length=1)

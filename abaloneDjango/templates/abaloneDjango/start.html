@@ -20,7 +20,7 @@
 
 </head>
 <body>
-참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
+ * 참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
 <table>
     <tr>
         <td width="150">참가자명</td>
@@ -41,6 +41,27 @@
     </tr>
 {% endfor %}
 </table>
+</BR>
+ * 진행중인 원정
+<table>
+    <tr>
+        <td width="70">번호</td>
+        <td width="100">참가자수</td>
+        <td width="100">현재차수</td>
+        <td width="100">차수취소</td>
+        <td width="100">완료</td>
+    </tr>
+{% for game in gamelist %}
+    <tr>
+        <td>{{ game.gameId }} </td>
+        <td>{{ game.joinUserCnt }}</td>
+        <td>{{ game.expeditionSeq }}</td>
+        <td><a href="{% url 'expeditionSeq_ini_view' gameid=game.gameId %}">차수취소</a></td>
+        <td><a href="{% url 'game_complete_view' gameid=game.gameId %}">완료</a></td>
+    </tr>
+{% endfor %}
+</table>
+ </BR>
 <input onclick="location.href={% url 'assin_view' %};return false;" value="원정시작" type="button" width="100%"/>
 <input onclick="location.href={% url 'init_view' %};return false;" value="초기화" type="button" width="100%"/>
 <input onclick="location.href={% url 'start_view' %};return false;" value="새로고침" type="button" width="100%"/>

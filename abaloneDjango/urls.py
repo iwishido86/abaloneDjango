@@ -20,7 +20,8 @@ from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
 from abaloneDjango.views import base_view, knight_login_view, knight_select_view, knight_auto_view, start_view, \
-    join_view, assin_view, delete_view, init_view, mycard_view
+    join_view, assin_view, delete_view, init_view, mycard_view, expeditionSeq_ini_view, \
+    game_complete_view, knight_election_view, knight_expedition_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,12 +34,17 @@ urlpatterns = [
 
     path('knight_select/', knight_select_view),
     path('knight_select/<str:username>/', knight_select_view, name='knight_select_view'), # 추가
-    path('img/', knight_select_view),
+    path('knight_election/<str:username>/', knight_election_view, name='knight_election_view'), # 추가
+    path('knight_expedition/<str:username>/', knight_expedition_view, name='knight_expedition_view'), # 추가
 
     path('start/', start_view ,name='start_view'),
     path('join/<str:username>/', join_view ,name='join_view'),
     path('delete/<str:username>/', delete_view ,name='delete_view'),
     path('assin/', assin_view ,name='assin_view'),
     path('init/', init_view ,name='init_view'),
+
+    path('game_complete/<int:gameid>/', game_complete_view, name='game_complete_view'),
+    path('expeditionSeq_ini/<int:gameid>/', expeditionSeq_ini_view, name='expeditionSeq_ini_view'),
+
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

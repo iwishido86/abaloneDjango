@@ -16,14 +16,24 @@
     </style>
 
     <script type="text/javascript">
+    var selectCardCnt = 0;
+
     function selectKnight(knightId){
         //alert(knightId);
 
+
         if ( knightId.border == 0 ){
+
+             if (selectCardCnt >= 2 ){
+                alert("카드는 두장만 선택할수 있습니다.");
+                return false;
+            }
             knightId.border = 5;
+            selectCardCnt++;
         }
         else{
             knightId.border = 0;
+            selectCardCnt--;
         }
 
     }
@@ -50,13 +60,13 @@
     {% csrf_token %}
     카드를 고르고 원정을 시작하세요 ->  <input onclick="submitFrom();" value="원정시작" type="button" width="100%"/>
     {{ form.as_p }}
-
+    {% load static %}
    <table class="table">
     <tbody>
         <tr>
             {% for knight in knightlist.all %}
                 <td scope="row">
-                    {% load static %}
+
                     <img class="card" src="{% static  knight.knightId %}.JPG"  name="knightImg{{ knight.knightId }}" border="0" onclick="selectKnight( knightImg{{ knight.knightId }} )">
                     <!--BR>{{ knight.name }}<-->
                 </td>
