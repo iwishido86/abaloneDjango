@@ -15,10 +15,9 @@ from .serializers import RegistrationUserSerializer
 
 def knight_select_view(request, username):
     template_name = 'abaloneDjango/knight_select.html'
-    #print('11111')
+
     if request.method == 'POST':
         form = KnightSelectForm(request.POST)
-        #print ('2222')
 
         username = request.POST.get('username')
 
@@ -38,12 +37,9 @@ def knight_select_view(request, username):
 
         knightliststr = request.POST.get('knightliststr')
 
-        #print('2222'+knightliststr+'2222')
-
         knightlist = knightliststr.split(';')
 
         for knightId in knightlist :
-            #print(knightId)
             if knightId == '':
                 break
 
@@ -202,7 +198,6 @@ def assin_view(request):
 
     # 게임 setting
     gamecnt = Game.objects.filter(completeYn='N').count()
-    #print('gamecnt:' + gamecnt.__str__())
 
     if gamecnt > 0 :
         return render(request, 'abaloneDjango/error.html', {'errstr': '아직 진행중인 게임이 있습니다. 게임을 취소하고 다시 시도하십시오'} )
@@ -210,10 +205,8 @@ def assin_view(request):
     gameIdObj = Game.objects.all().order_by('-gameId')
 
     if gameIdObj :
-        print('gameId:' + gameIdObj[0].gameId.__str__())
         gameId = gameIdObj[0].gameId + 1
     else:
-        print('gameId is null:')
         gameId= 1
 
     game = Game.objects.create()
@@ -238,7 +231,6 @@ def assin_view(request):
 
         q = Q(knightId=i)
         q.add(~assineduserq ,q.AND)
-        #print('index::::' + i.__str__()+ '::'+ q.__str__())
 
         selectknightlist = SelectKnight.objects.filter(q)
 
@@ -248,26 +240,19 @@ def assin_view(request):
         selectknightcnt = weight * selectknightlist.count()
 
         assinnum = randint(1,joinusercnt + selectknightcnt +1 - i)
-        #print('index::::' + i.__str__() + '::assinnum:'+ assinnum.__str__()+ '::selectknightcnt:'+ selectknightcnt.__str__()+ '::joinusercnt:'+ joinusercnt.__str__()+ ':::'+ ( ((assinnum-1)/3).__int__()+1).__str__())
 
         if assinnum <= selectknightcnt:
-            #print('111::(assinnum - selectknightcnt-1):' + ( (assinnum-1)/weight).__int__().__str__())
             assinedusername = selectknightlist[ ( (assinnum-1)/weight).__int__()].username
-            #print('111:' + selectknightlist.__str__())
 
         else:
             unassineduserlist = User.objects.filter(Q(joinYn='Y') & Q(assinKnightId=0))
-            #print('222::(assinnum - selectknightcnt-1):' + (
-            #            assinnum - selectknightcnt - 1).__str__())
             assinedusername = unassineduserlist[(assinnum - selectknightcnt-1)].username
-            #print('222:' + assinedusername)
 
         user = get_object_or_404(User, username=assinedusername)
         user.assinKnightId = i
         user.save()
 
         assineduserq.add( Q(username=assinedusername) , assineduserq.OR)
-        #print(assineduserq.__str__())
 
     return HttpResponseRedirect('/start/' )
 
@@ -346,11 +331,9 @@ def expeditionSeq_ini_view(request,gameid):
     game.save()
 
     expedition = Expedition.objects.filter(gameId=gameid,expeditionSeq__gte=expeditionSeq)
-    print(" expedition :" + expedition.count().__str__() )
     expedition.delete()
 
     election = Election.objects.filter(gameId=gameid, expeditionSeq__gte=expeditionSeq)
-    print(" election :" + election.count().__str__())
     election.delete()
 
     return HttpResponseRedirect('/start/' )
@@ -375,8 +358,6 @@ def knight_election_view(request, username):
         succyn = request.POST.get('succyn')
         expeditionseq = request.POST.get('expeditionseq')
 
-        print(" gameid :"+gameid+" expeditionseq :" + expeditionseq+" succyn :"+succyn)
-
         # 게임 및 회차 valid
         game = get_object_or_404(Game, gameId=gameid)
         if game.expeditionSeq.__str__()  != expeditionseq:
@@ -399,7 +380,6 @@ def knight_election_view(request, username):
 
         election.save()
         maxelectioncnt = gamemap[game.joinUserCnt-7][int(expeditionseq)-1]
-        print(" maxelectioncnt :" + maxelectioncnt.__str__()  + " game.joinUserCnt :" + game.joinUserCnt.__str__() + " expeditionseq :" + expeditionseq)
 
         # 최종결과 저장
         electioncnt = Election.objects.filter(gameId=gameid,expeditionSeq=expeditionseq).count()
