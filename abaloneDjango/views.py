@@ -33,7 +33,8 @@ def knight_select_view(request, username):
 
         delSelectKnightList = SelectKnight.objects.filter(username=username)
 
-        delSelectKnightList.delete()
+        for delSelectKnight in delSelectKnightList:
+            delSelectKnight.delete()
 
         knightliststr = request.POST.get('knightliststr')
 
