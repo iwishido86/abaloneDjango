@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        html{
+            font-size : 15px;
+        }
         td{
             border-color: #9d9d00;
-            border-size: 2px;
+            border-size: 1px;
             vertical-align: middle;
             margin: 5px auto 5px auto;
+            font-size : 15px;
         }
     </style>
 
@@ -28,7 +32,8 @@
         <td width="100">준비완료</td>
         <td width="50">참가</td>
         <td width="50">삭제</td>
-        <td width="70">로그인</td>
+        <td width="50">호수</td>
+        <td width="50">로긴</td>
     </tr>
 {% for user in userlist %}
     <tr>
@@ -37,7 +42,8 @@
         <td>{{ user.readyYn }}</td>
         <td><a href="{% url 'join_view' username=user.username %}">참가</a></td>
         <td><a href="{% url 'delete_view' username=user.username %}">삭제</a></td>
-        <td><a href="{% url 'knight_select_view' username=user.username %}">로그인</a></td>
+        <td><a href="{% url 'hosu_view' username=user.username %}">호수</a></td>
+        <td><a href="{% url 'knight_select_view' username=user.username %}">로긴</a></td>
     </tr>
 {% endfor %}
 </table>
@@ -46,10 +52,12 @@
 <table>
     <tr>
         <td width="70">번호</td>
-        <td width="100">참가자수</td>
-        <td width="100">현재차수</td>
+        <td width="100">참가자</td>
+        <td width="70">차수</td>
         <td width="100">차수취소</td>
-        <td width="100">완료</td>
+        <td width="70">완료</td>
+        <td width="70">선승</td>
+        <td width="70">악승</td>
     </tr>
 {% for game in gamelist %}
     <tr>
@@ -58,6 +66,8 @@
         <td>{{ game.expeditionSeq }}</td>
         <td><a href="{% url 'expeditionSeq_ini_view' gameid=game.gameId %}">차수취소</a></td>
         <td><a href="{% url 'game_complete_view' gameid=game.gameId %}">완료</a></td>
+        <td><a href="{% url 'game_succ_view' gameid=game.gameId %}">선승</a></td>
+        <td><a href="{% url 'game_fail_view' gameid=game.gameId %}">악승</a></td>
     </tr>
 {% endfor %}
 </table>

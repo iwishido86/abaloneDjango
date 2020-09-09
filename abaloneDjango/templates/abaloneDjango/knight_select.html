@@ -6,7 +6,7 @@
     <title>Document</title>
     <style>
         .card{
-            width : 100px;
+            width : 90px;
             border-color: #9d9d00;
             background-color: #9d9d9d;
             vertical-align: middle;
@@ -71,7 +71,7 @@
                     <!--BR>{{ knight.name }}<-->
                 </td>
 
-                {% if knight.knightId|divisibleby:3 != 0 %}
+                {% if knight.knightId|divisibleby:4 != 0 %}
                     <tr></tr>
                 {% endif %}
             {% endfor %}

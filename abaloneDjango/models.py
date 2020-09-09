@@ -25,24 +25,25 @@ class Knight(models.Model):
     evlYn = models.CharField(max_length=1)
 
 
-class User(models.Model):
-    username = models.CharField(max_length=30,unique=True)
-    joinYn = models.CharField(max_length=1)
-    readyYn = models.CharField(default='N',max_length=1)
-    assinKnightId = models.IntegerField(default=0, help_text="지정카드")
-
-
 class SelectKnight(models.Model):
     username = models.CharField(max_length=30)
     knightId = models.IntegerField(default=0, help_text="카드번호")
 
 
-
 class User(models.Model):
     username = models.CharField(max_length=30,unique=True)
     joinYn = models.CharField(max_length=1)
     readyYn = models.CharField(default='N',max_length=1)
+    hosuYn = models.CharField(default='N', max_length=1, help_text="호수의여신")
     assinKnightId = models.IntegerField(default=0, help_text="지정카드")
+
+
+class GameHistory(models.Model):
+    gameId = models.IntegerField(default=0, help_text="원정번호")
+    username = models.CharField(default='N',max_length=30)
+    succYn = models.CharField(default='N',max_length=1)
+    winYn = models.CharField(default='N',max_length=1)
+    knightId = models.IntegerField(default=0, help_text="지정카드")
 
 
 class Game(models.Model):

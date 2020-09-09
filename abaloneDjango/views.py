@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .forms import UserLoginForm, KnightSelectForm, KnightElectionForm
-from .models import Board, Knight, User, SelectKnight, Game, Election, Expedition
+from .models import Board, Knight, User, SelectKnight, Game, Election, Expedition, GameHistory
 from .serializers import RegistrationUserSerializer
 
 
@@ -56,7 +56,16 @@ def knight_select_view(request, username):
     else:
         form = KnightSelectForm()
         form.fields['username'].initial = username
-        knightlist = Knight.objects.filter(~Q(knightId=9)).order_by('knightId')
+        knightlist = Knight.objects.order_by('knightId')
+
+        user, created = User.objects.get_or_create(
+            username=username
+        )
+        user.username = username
+        user.joinYn = 'Y'
+
+        user.save()
+
         context = {
             'form': form,
             'username':username,
@@ -213,6 +222,11 @@ def assin_view(request):
 
     game.gameId = gameId
     game.joinUserCnt = joinusercnt
+    
+    #12명이 최대
+    if game.joinUserCnt> 12 :
+        game.joinUserCnt = 12
+    
 
     game.save()
 
@@ -280,6 +294,26 @@ def join_view(request,username):
     return HttpResponseRedirect('/start/' )
 
 
+def hosu_view(request,username):
+    template_name = 'abaloneDjango/start.html'
+
+    # 카드 세팅 초기화
+    userlist = User.objects.filter(hosuYn='Y')
+
+    for user in userlist:
+        user.hosuYn = 'N'
+        user.save()
+
+    user = get_object_or_404(User, username=username)
+
+    user.username = username
+    user.hosuYn = 'Y'
+
+    user.save()
+
+    return HttpResponseRedirect('/start/' )
+
+
 def init_view(request):
     template_name = 'abaloneDjango/start.html'
 
@@ -288,6 +322,7 @@ def init_view(request):
     for user in userlist:
         user.joinYn = 'N'
         user.readyYn = 'N'
+        user.hosuYn = 'N'
         user.assinKnightId = 0
         user.save()
 
@@ -319,6 +354,74 @@ def game_complete_view(request,gameid):
     return HttpResponseRedirect('/start/' )
 
 
+def game_succ_view(request,gameid):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.filter(joinYn='Y')
+
+    # 유저 지정카드 초기화
+    for user in userlist:
+        # 투표검증
+
+        knight = get_object_or_404(Knight, knightId=user.assinKnightId)
+        if knight.evlYn == 'N':
+            winYn = 'Y'         # 선
+        else:
+            winYn = 'N'
+
+        gameHistory = GameHistory.objects.create()
+
+        gameHistory.gameId = gameid
+        gameHistory.succYn = 'Y'
+        gameHistory.winYn = winYn
+        gameHistory.username = user.username
+        gameHistory.knightId = user.assinKnightId
+
+        gameHistory.save()
+
+    game = get_object_or_404(Game, gameId=gameid)
+
+    game.completeYn = 'Y'
+
+    game.save()
+
+    return HttpResponseRedirect('/start/' )
+
+
+def game_fail_view(request,gameid):
+    template_name = 'abaloneDjango/start.html'
+
+    userlist = User.objects.filter(joinYn='Y')
+
+    # 유저 지정카드 초기화
+    for user in userlist:
+        # 투표검증
+
+        knight = get_object_or_404(Knight, knightId=user.assinKnightId)
+        if knight.evlYn == 'Y':  # 악
+            winYn = 'Y'
+        else:
+            winYn = 'N'
+
+        gameHistory = GameHistory.objects.create()
+
+        gameHistory.gameId = gameid
+        gameHistory.succYn = 'Y'
+        gameHistory.winYn = winYn
+        gameHistory.username = user.username
+        gameHistory.knightId = user.assinKnightId
+
+        gameHistory.save()
+
+    game = get_object_or_404(Game, gameId=gameid)
+
+    game.completeYn = 'Y'
+
+    game.save()
+
+    return HttpResponseRedirect('/start/' )
+
+
 def expeditionSeq_ini_view(request,gameid):
     template_name = 'abaloneDjango/start.html'
 
@@ -339,12 +442,13 @@ def expeditionSeq_ini_view(request,gameid):
     return HttpResponseRedirect('/start/' )
 
 
-
 def knight_election_view(request, username):
     template_name = 'abaloneDjango/knight_election.html'
 
     gamemap = [
         [2, 3, 3, 4, 4],
+        [3, 4, 4, 5, 5],
+        [3, 4, 4, 5, 5],
         [3, 4, 4, 5, 5],
         [3, 4, 4, 5, 5],
         [3, 4, 4, 5, 5],
@@ -364,6 +468,14 @@ def knight_election_view(request, username):
             return render(request, 'abaloneDjango/knight_error.html', {'username': username, 'errstr': '회차 오류/ 새로고침후 다시 투표'})
         if game.completeYn != 'N':
             return render(request, 'abaloneDjango/knight_error.html', {'username': username, 'errstr': '종료된 게임/ 새로고침후 다시 투표'})
+
+        # 투표검증
+        user = get_object_or_404(User, username=username)
+
+        knight = get_object_or_404(Knight, knightId=user.assinKnightId)
+        print(knight.evlYn + succyn)
+        if knight.evlYn == 'N' and succyn == 'N':
+            return render(request, 'abaloneDjango/knight_error.html', {'username': username, 'errstr': '선은 실패를 낼 수 없습니다.'})
 
         # 투표여부확인
         electioncnt = Election.objects.filter(gameId=gameid, expeditionSeq=expeditionseq, username=username).count()
@@ -448,7 +560,6 @@ def knight_election_view(request, username):
     return render(request, template_name, context)
 
 
-
 def knight_expedition_view(request, username):
     template_name = 'abaloneDjango/knight_expedition.html'
 
@@ -466,7 +577,6 @@ def knight_expedition_view(request, username):
         form.fields['expeditionseq'].initial = expeditionseq
         form.fields['username'].initial = username
         form.fields['succyn'].initial = succyn
-
 
         # 투표여부확인
         electioncnt = Election.objects.filter(gameId=gameid, expeditionSeq=expeditionseq, username=username).count()
@@ -490,23 +600,46 @@ def knight_expedition_view(request, username):
         form.fields['expeditionseq'].initial = game.expeditionSeq
         form.fields['username'].initial = username
 
-        expeditionlist = Expedition.objects.filter(gameId=game.gameId).order_by('expeditionSeq')
+        user = get_object_or_404(User, username=username)
 
-        failrangelist = {}
-        succrangelist = {}
-        for expedition in expeditionlist:
-            failrangelist[expedition.expeditionSeq]= range(1, expedition.expeditionUserCnt - expedition.succUserCnt)
-            succrangelist[expedition.expeditionSeq]  = range(1,expedition.succUserCnt)
+        expeditionqslist = Expedition.objects.filter(gameId=game.gameId).order_by('expeditionSeq')
+
+        expeditionlist = []
+        expedition = {}
+
+        for expeditionqs in expeditionqslist:
+            expedition = expeditionqs.__dict__
+            electionlist = []
+            for i in range(0,expeditionqs.succUserCnt):
+                electionlist.append('Y')
+            for i in range(0, expeditionqs.expeditionUserCnt - expeditionqs.succUserCnt):
+                electionlist.append('N')
+            expedition['electionlist'] = electionlist
+
+            expeditionlist.append(expedition)
+
+        #print(expeditionlist)
 
         context = {
             'form': form,
             'username':username,
+            'user':user,
             'gameid': game.gameId,
             'joinusercnt': game.joinUserCnt,
             'expeditionseq': game.expeditionSeq,
             'expeditionlist': expeditionlist,
-            'failrangelist':failrangelist,
-            'succrangelist': succrangelist,
         }
 
+    return render(request, template_name, context)
+
+
+def hosu_show_view(request, username):
+    template_name = 'abaloneDjango/hosu.html'
+
+    userlist = User.objects.filter(Q(joinYn='Y') & ~Q(username=username))  # 추가
+
+    context = {
+        'username':username,
+        'userlist': userlist,  # 추가
+    }
     return render(request, template_name, context)

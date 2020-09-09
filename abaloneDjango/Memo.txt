@@ -16,6 +16,7 @@ python manage.py migrate
 
 python manage.py runserver
 
+python manage.py createsuperuser
 
 python3 manage.py createsuperuser
 
@@ -38,6 +39,7 @@ git clone
 python3 manage.py runserver
 
 Mac, Windows 공통(계속)
+
 
 14. 커맨드 창이 열리면 "sudo apt-get update"
 
@@ -100,3 +102,13 @@ http://ec2-18-223-102-218.us-east-2.compute.amazonaws.com:8000/knight_ligin/경�
 
 bg
 disown -h
+
+git stash clear
+
+
+python3 manage.py makemigrations abaloneDjango
+python3 manage.py migrate abaloneDjango
+python3 manage.py runserver 0.0.0.0:8000
+
+
+ps -ef | grep py

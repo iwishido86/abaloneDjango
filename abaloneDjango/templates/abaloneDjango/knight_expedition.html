@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        table{
+            font-size : 15px;
+        }
         .expedition1{
             background:url("{% static joinusercnt %}_expedition.JPG") no-repeat;
             background-size:100%;
@@ -37,6 +40,9 @@
     {% csrf_token %}
     <br>
     <a href="{% url 'knight_expedition_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
+    {% if user.hosuYn == 'Y' %}
+    <!--a href="{% url 'hosu_show_view' username=username %}"><input value="호수보기" type="button" width="100%"/></a-->
+    {% endif %}
     {{ form.as_p }}
     <br>
     <br>
@@ -62,16 +68,17 @@
 </div>
     <table class="table"  height="80">
         <tr>
-            <td width="50">차수</td>
-            <td width="150">결과</td>
-            <td width="200">참가자</td>
+            <td width="10">차</td>
+            <td width="250">결과</td>
+            <td width="150">참가자</td>
         </tr>
         <tr>
-            {% for  expedition2 in expeditionlist.all %}
+            {% for  expedition2 in expeditionlist %}
                 <tr>
                     <td>{{ expedition2.expeditionSeq }} </td>
                     <td>
-                        {{ expedition2.succUserCnt }}/{{ expedition2.expeditionUserCnt }}</td>
+                        {% for  election in expedition2.electionlist %}{% if election == 'Y' %}<img src="{% static 'Y' %}_election.JPG" width="45" >{% endif %}{% if election == 'N' %}<img src="{% static 'N' %}_election.JPG" width="45" style="margin:0;">{% endif %}{% endfor %}
+                    </td>
                     <td>{{ expedition2.usernamelist }}</td>
                 </tr>
             {% endfor %}
