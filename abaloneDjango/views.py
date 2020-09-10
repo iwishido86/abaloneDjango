@@ -474,7 +474,7 @@ def knight_election_view(request, username):
         user = get_object_or_404(User, username=username)
 
         knight = get_object_or_404(Knight, knightId=user.assinKnightId)
-        print(knight.evlYn + succyn)
+        #print(knight.evlYn + succyn)
         if knight.evlYn == 'N' and succyn == 'N':
             return render(request, 'abaloneDjango/knight_error.html', {'username': username, 'errstr': '선은 실패를 낼 수 없습니다.'})
 
