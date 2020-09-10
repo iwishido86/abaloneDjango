@@ -1,6 +1,7 @@
 from random import random, randint
 
-from django.db.models import Q, Max
+from django.db.models import Q, Max, Count, FloatField
+from django.db.models.functions import Cast
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from rest_framework.authtoken.models import Token
@@ -407,7 +408,7 @@ def game_fail_view(request,gameid):
         gameHistory = GameHistory.objects.create()
 
         gameHistory.gameId = gameid
-        gameHistory.succYn = 'Y'
+        gameHistory.succYn = 'N'
         gameHistory.winYn = winYn
         gameHistory.username = user.username
         gameHistory.knightId = user.assinKnightId
@@ -642,5 +643,51 @@ def hosu_show_view(request, username):
     context = {
         'username':username,
         'userlist': userlist,  # 추가
+    }
+    return render(request, template_name, context)
+
+
+def hosu_select_view(request, username):
+    template_name = 'abaloneDjango/hosu_select.html'
+
+     # 투증
+    user = get_object_or_404(User, username=username)
+
+    if user.hosuYn != 'Y' :
+        return render(request, 'abaloneDjango/knight_error.html', {'username': username, 'errstr': '당신은 호수의 여신이 없습니다.'})
+
+    targetusername = request.GET.get('target')
+
+    print(targetusername)
+
+
+    targetuser = get_object_or_404(User, username=targetusername)
+    knight = get_object_or_404(Knight, knightId=targetuser.assinKnightId)
+
+    targetuser.hosuYn = 'Y'
+    targetuser.save()
+
+    user.hosuYn = 'N'
+    user.save()
+
+
+    context = {
+        'username': username,
+        'targetusername':targetusername,
+        'knight': knight,  # 추가
+    }
+    return render(request, template_name, context)
+
+
+def honor_view(request, username):
+    template_name = 'abaloneDjango/honor.html'
+
+    honorlist = GameHistory.objects.values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-winrate')[0:5]
+
+    print(honorlist)
+    context = {
+        'username':username,
+        'honorlist': honorlist,  # 추가
     }
     return render(request, template_name, context)

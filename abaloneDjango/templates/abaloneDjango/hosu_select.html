@@ -24,20 +24,15 @@
 
 </head>
 <body>
+    {% load static %}
 {% include "./top_menu.html" %}
 <form method="post">
-    <table>
-        <tr>
-            <td width="150">참가자명</td>
-            <td width="200">호수보기</td>
-        </tr>
-    {% for user in userlist %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td><a href="{% url 'hosu_select_view' username=username %}?target={{user.username}}">호수</a></td>
-        </tr>
-    {% endfor %}
-    </table>
+        {% csrf_token %}
+    <div style="align:center;">
+{{targetusername}}<br>
+        {% if knight.evlYn == 'Y' %}<img src="{% static 'N' %}_HOSU.JPG" width="300" >{% endif %}
+        {% if knight.evlYn == 'N' %}<img src="{% static 'Y' %}_HOSU.JPG" width="300" style="margin:0;">{% endif %}
+    </div>
 </form>
 </body>
 </html>

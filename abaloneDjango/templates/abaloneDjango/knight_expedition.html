@@ -5,7 +5,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>아발론 온라인 코어뱅킹</title>
     <style>
         table{
             font-size : 15px;
@@ -41,7 +41,7 @@
     <br>
     <a href="{% url 'knight_expedition_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
     {% if user.hosuYn == 'Y' %}
-    <!--a href="{% url 'hosu_show_view' username=username %}"><input value="호수보기" type="button" width="100%"/></a-->
+    <a href="{% url 'hosu_show_view' username=username %}"><input value="호수보기" type="button" width="100%"/></a>
     {% endif %}
     {{ form.as_p }}
     <br>
@@ -50,7 +50,7 @@
     <table  height="120">
     <tbody>
         <tr>
-            {% for  expedition in expeditionlist.all %}
+            {% for  expedition in expeditionlist %}
                 <td scope="row"  width="20%" class="td_expedition">
                     <img src="{% static expedition.succYn %}_expedition.JPG" width="100%">
                 </td>
