@@ -23,11 +23,13 @@
         var data = JSON.parse(e.data);
         var message = data['message'];
 
-        if (message == 'start') {
-            // 1초 후 작동해야할 코드
+        if (message == 'assin') {
+            // 0.5초 후 작동해야할 코드(원정시작 대기)
             setTimeout(function(){
                document.location.href = "{% url 'mycard_view' username=username %}";
-            }, 1000);
+            }, 500);
+        } else if (message == 'init') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
         }
     };
     </script>
