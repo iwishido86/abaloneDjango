@@ -8,6 +8,9 @@
         html{
             font-size : 15px;
         }
+        tr{
+            text-align:center
+        }
         td{
             border-color: #9d9d00;
             border-size: 1px;
@@ -18,16 +21,22 @@
     </style>
 
     <script type="text/javascript">
-
+    // 클라이언트와 서버의 웹소켓 통신을 가능하도록 연결시켜주는 부분이다.
+    // router.py에서의 url과 일치하도록 해 주어야한다.
+    var web_socket = new WebSocket('ws://' + window.location.host + '/abalone/<str:username>/');
+    // onmessage는 counsumers에서 보내는 메세지를 받는 부분이다.
+    web_socket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+    };
     </script>
-
 
 </head>
 <body>
  * 참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
 <table>
     <tr>
-        <td width="150">참가자명</td>
+        <td width="150" style="text-align:left">참가자명</td>
         <td width="100">참가여부</td>
         <td width="100">준비완료</td>
         <td width="50">참가</td>
@@ -37,13 +46,13 @@
     </tr>
 {% for user in userlist %}
     <tr>
-        <td>{{ user.username }} [ <font color="white">{{ user.assinKnightId }}</font></td>
+        <td style="text-align:left">{{ user.username }}<font color="white">{{ user.assinKnightId }}</font></td>
         <td>{{ user.joinYn }}</td>
         <td>{{ user.readyYn }}</td>
-        <td><a href="{% url 'join_view' username=user.username %}">참가</a></td>
-        <td><a href="{% url 'delete_view' username=user.username %}">삭제</a></td>
-        <td><a href="{% url 'hosu_view' username=user.username %}">호수</a></td>
-        <td><a href="{% url 'knight_select_view' username=user.username %}">로긴</a></td>
+        <td><a href="{% url 'join_view' username=user.username %}"><input value="참가" type="button" width="100%"/></a></td>
+        <td><a href="{% url 'delete_view' username=user.username %}"><input value="삭제" type="button" width="100%"/></a></td>
+        <td><a href="{% url 'hosu_view' username=user.username %}"><input value="호수" type="button" width="100%"/></a></td>
+        <td><a href="{% url 'knight_select_view' username=user.username %}"><input value="로긴" type="button" width="100%"/></a></td>
     </tr>
 {% endfor %}
 </table>
@@ -64,16 +73,69 @@
         <td>{{ game.gameId }} </td>
         <td>{{ game.joinUserCnt }}</td>
         <td>{{ game.expeditionSeq }}</td>
-        <td><a href="{% url 'expeditionSeq_ini_view' gameid=game.gameId %}">차수취소</a></td>
-        <td><a href="{% url 'game_complete_view' gameid=game.gameId %}">완료</a></td>
-        <td><a href="{% url 'game_succ_view' gameid=game.gameId %}">선승</a></td>
-        <td><a href="{% url 'game_fail_view' gameid=game.gameId %}">악승</a></td>
+        <td><input id="expeditionSeq_ini" value="차수취소" type="button" width="100%"/></td>
+        <td><input id="game_complete" value="완료" type="button" width="100%"/></td>
+        <td><input id="game_succ" value="선승" type="button" width="100%"/></td>
+        <td><input id="game_fail" value="악승" type="button" width="100%"/></td>
     </tr>
+    <script type="text/javascript">
+    // 차수취소 버튼 클릭 시, 원정상황 페이지 최근 차수 취소
+    document.querySelector('#expeditionSeq_ini').onclick = function(e) {
+        document.location.href = "{% url 'expeditionSeq_ini_view' gameid=game.gameId %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'expeditionSeq_ini'
+        }));
+    };
+    // 완료 버튼 클릭 시, 참가자 카드선택 페이지로 변경
+    document.querySelector('#game_complete').onclick = function(e) {
+        document.location.href = "{% url 'game_complete_view' gameid=game.gameId %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'game_complete'
+        }));
+    };
+    // 선승 버튼 클릭 시, 참가자 카드선택 페이지로 변경
+    document.querySelector('#game_succ').onclick = function(e) {
+        document.location.href = "{% url 'game_succ_view' gameid=game.gameId %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'game_succ'
+        }));
+    };
+    // 악승 버튼 클릭 시, 참가자 카드선택 페이지로 변경
+    document.querySelector('#game_fail').onclick = function(e) {
+        document.location.href = "{% url 'game_fail_view' gameid=game.gameId %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'game_fail'
+        }));
+    };
+    </script>
 {% endfor %}
 </table>
  </BR>
-<input onclick="location.href={% url 'assin_view' %};return false;" value="원정시작" type="button" width="100%"/>
-<input onclick="location.href={% url 'init_view' %};return false;" value="초기화" type="button" width="100%"/>
+<input id="assin" value="원정시작" type="button" width="100%"/>
+<input id="init" value="초기화" type="button" width="100%"/>
 <input onclick="location.href={% url 'start_view' %};return false;" value="새로고침" type="button" width="100%"/>
+<script type="text/javascript">
+    // 원정시작 버튼 클릭 시, 원정 시작 후, 참가자 내카드 페이지로 변경
+    document.querySelector('#assin').onclick = function(e) {
+        document.location.href = "{% url 'assin_view' %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'assin'
+        }));
+    };
+
+    // 초기화 버튼 클릭 시, 초기화 진행 후, 참가자 카드선택 페이지로 변경
+    document.querySelector('#init').onclick = function(e) {
+        document.location.href = "{% url 'init_view' %}";
+
+        web_socket.send(JSON.stringify({
+            'message': 'init'
+        }));
+    };
+</script>
 </body>
 </html>

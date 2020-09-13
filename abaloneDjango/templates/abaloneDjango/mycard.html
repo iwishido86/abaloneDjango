@@ -14,11 +14,27 @@
     </style>
 
     <script type="text/javascript">
-        //var timer = setInterval("timer_procedure();",5000);
+    // 클라이언트와 서버의 웹소켓 통신을 가능하도록 연결시켜주는 부분이다.
+    // router.py에서의 url과 일치하도록 해 주어야한다.
+    var web_socket = new WebSocket('ws://' + window.location.host + '/abalone/<str:username>/');
 
-        function timer_procedure(){
+    // onmessage는 counsumers에서 보내는 메세지를 받는 부분이다.
+    web_socket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+
+        if (message == 'assin') {
             document.location.href = "{% url 'mycard_view' username=username %}";
+        } else if (message == 'game_succ') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
+        } else if (message == 'game_fail') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
+        } else if (message == 'game_complete') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
+        } else if (message == 'init') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
         }
+    };
     </script>
 
 

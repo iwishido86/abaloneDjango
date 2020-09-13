@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'abaloneDjango',  # 추가
+    'channels', # Websocket 추가
 
     'rest_framework.authtoken',
 ]
@@ -74,6 +75,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'abaloneDjango.wsgi.application'
+
+ASGI_APPLICATION = 'abaloneDjango.routing.application' # Websocket 추가
 
 
 # Database
@@ -125,7 +128,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
 # ... 처음이시면 위치에 신경 쓸 필요 없고
 # ... settings.py에 있기만 해도 됩니다.
 REST_FRAMEWORK = {
@@ -136,4 +138,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+
+# ASGI 통신을 위한 Redis Layers 설정
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    },
+}
+
 # ...
