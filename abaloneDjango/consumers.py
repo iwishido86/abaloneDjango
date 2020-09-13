@@ -8,12 +8,12 @@ class abalone_consumer(WebsocketConsumer):
 
     # websocket이 연결 되었을 때
     def connect(self):
-        self.room_name = 'abalone'
-        self.room_group_name = 'game_%s' % self.room_name
+        self.game_name = 'abalone'
+        self.game_group_name = 'game_%s' % self.game_name
 
         # 그룹에 Join 하는 메서드이다.
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
+            self.game_group_name,
             self.channel_name
         )
 
@@ -23,7 +23,7 @@ class abalone_consumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # 그룹을 leave 하는 메서드이다.
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
+            self.game_group_name,
             self.channel_name
         )
 
@@ -33,15 +33,15 @@ class abalone_consumer(WebsocketConsumer):
         message = text_data_json['message']
         # 그룹으로 메세지를 돌려보내주는 부분이다.
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
+            self.game_group_name,
             {
-                'type': 'chat_message',
+                'type': 'game_message',
                 'message': message
             }
         )
 
     # 위의 receive 메서드에서 그룹으로 메세지를 보내면 그 메세지를 받아 처리하는 부분이다.
-    def chat_message(self, event):
+    def game_message(self, event):
         message = event['message']
 
         # 클라이언트로 웹소켓을 통해 받은 메세지를 다시 보내주는 부분이다.

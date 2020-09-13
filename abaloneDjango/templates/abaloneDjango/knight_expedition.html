@@ -34,18 +34,20 @@
         var data = JSON.parse(e.data);
         var message = data['message'];
 
-        if (message == 'assin') {
-            // 0.5초 후 작동해야할 코드
-            setTimeout(function(){
-               document.location.href = "{% url 'mycard_view' username=username %}";
-            }, 500);
+        if (message == 'election') {
+            document.location.href = "{% url 'knight_expedition_view' username=username %}";
+        } else if (message == 'assin') {
+            document.location.href = "{% url 'mycard_view' username=username %}";
+        } else if (message == 'game_succ') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
+        } else if (message == 'game_fail') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
+        } else if (message == 'game_complete') {
+            document.location.href = "{% url 'knight_select_view' username=username %}";
         } else if (message == 'init') {
             document.location.href = "{% url 'knight_select_view' username=username %}";
-        } else if (message == 'election') {
-            // 0.5초 후 작동해야할 코드
-            setTimeout(function(){
-               document.location.href = "{% url 'knight_expedition_view' username=username %}";
-            }, 500);
+        } else if (message == 'expeditionSeq_ini') {
+            document.location.href = "{% url 'knight_expedition_view' username=username %}";
         }
     };
     </script>
