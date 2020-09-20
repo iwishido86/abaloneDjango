@@ -683,7 +683,7 @@ def honor_view(request, username):
     template_name = 'abaloneDjango/honor.html'
 
     honorlist = GameHistory.objects.values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
-        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-winrate')[0:5]
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('wincnt')
 
     print(honorlist)
     context = {

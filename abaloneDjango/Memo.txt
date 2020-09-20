@@ -10,6 +10,10 @@ pip install wheel django djangorestframework pylint
 django-admin startproject config .
 django-admin startapp abaloneDjango
 
+pip install channels
+
+pip install -U channels
+pip install -U channels_redis
 
 python manage.py makemigrations
 python manage.py migrate
@@ -22,12 +26,13 @@ python3 manage.py createsuperuser
 
 python3 manage.py makemigrations abaloneDjango
 python3 manage.py migrate abaloneDjango
-python3 manage.py runserver 0.0.0.0:8000
+python3 manage.py runserver 0.0.0.0:8000 > abalone_log &
 
 pip install httpie
 
 ps -ef | grep py
 
+3.18.90.222
 
 
 sudo apt-get update
