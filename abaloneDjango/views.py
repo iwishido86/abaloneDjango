@@ -686,16 +686,16 @@ def honor_view(request, username):
         .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')
 
     goodsucclist = GameHistory.objects.filter(knightId__in=[1,2]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
-        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:3]
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:5]
 
     goodfaillist = GameHistory.objects.filter(knightId__in=[1,2]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='N')))\
-        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:3]
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:5]
 
     evlsucclist = GameHistory.objects.filter(knightId__in=[5,6,7,10]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
         .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:5]
 
 
-    print(honorlist)
+    #print(honorlist)
     context = {
         'username':username,
         'honorlist': honorlist,  # 추가
