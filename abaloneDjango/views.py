@@ -683,11 +683,26 @@ def honor_view(request, username):
     template_name = 'abaloneDjango/honor.html'
 
     honorlist = GameHistory.objects.values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
-        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('wincnt')
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')
+
+    goodsucclist = GameHistory.objects.filter(knightId__in=[1,2]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:3]
+
+    goodfaillist = GameHistory.objects.filter(knightId__in=[1,2]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='N')))\
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:3]
+
+    evlsucclist = GameHistory.objects.filter(knightId__in=[5,6,7,10]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
+        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')[0:5]
+
 
     print(honorlist)
     context = {
         'username':username,
         'honorlist': honorlist,  # 추가
+        'goodsucclist': goodsucclist,  # 추가
+        'goodfaillist': goodfaillist,  # 추가
+        'evlsucclist': evlsucclist,  # 추가
+
+
     }
     return render(request, template_name, context)

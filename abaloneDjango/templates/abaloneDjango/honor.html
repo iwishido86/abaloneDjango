@@ -63,6 +63,64 @@
         </tr>
     {% endfor %}
     </table>
+    <br>
+    * 훌륭한 리더들
+    <table>
+        <tr>
+            <td width="100">기사</td>
+
+            <td width="100">승리</td>
+            <td width="100">원정</td>
+            <td width="100">승률</td>
+        </tr>
+    {% for  goodsucc in goodsucclist.all %}
+        <tr>
+            <td>{{  goodsucc.username }}</td>
+            <td>{{  goodsucc.wincnt }}</td>
+            <td>{{  goodsucc.totalcnt }}</td>
+            <td>{{  goodsucc.winrate|stringformat:"d%%" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+        <br>
+    * 무능한 리더들
+    <table>
+        <tr>
+            <td width="100">기사</td>
+
+            <td width="100">패배</td>
+            <td width="100">원정</td>
+            <td width="100">패률</td>
+        </tr>
+    {% for  goodfail in goodfaillist.all %}
+        <tr>
+            <td>{{  goodfail.username }}</td>
+            <td>{{  goodfail.wincnt }}</td>
+            <td>{{  goodfail.totalcnt }}</td>
+            <td>{{  goodfail.winrate|stringformat:"d%%" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+        <br>
+    * 악의 화신들
+    <table>
+        <tr>
+            <td width="100">기사</td>
+
+            <td width="100">승리</td>
+            <td width="100">원정</td>
+            <td width="100">승률</td>
+        </tr>
+    {% for  evlsucc in evlsucclist.all %}
+        <tr>
+            <td>{{  evlsucc.username }}</td>
+            <td>{{  evlsucc.wincnt }}</td>
+            <td>{{  evlsucc.totalcnt }}</td>
+            <td>{{  evlsucc.winrate|stringformat:"d%%" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
 </form>
 </body>
 </html>
