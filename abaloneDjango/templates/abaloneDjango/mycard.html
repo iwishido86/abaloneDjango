@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="imagetoolbar" content="no">
     <title>아발론 온라인 코어뱅킹</title>
     <style>
         td{
@@ -10,6 +11,14 @@
             border-size: 2px;
             vertical-align: middle;
             margin: 5px auto 5px auto;
+        }
+        img{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .cardContainer {
@@ -19,6 +28,9 @@
             position: relative;
             transform-style: preserve-3d;
             transition: 0.5s;
+
+
+
         }
 
         .front {
@@ -42,6 +54,11 @@
     </style>
 
     <script type="text/javascript">
+
+    document.addEventListener("contextmenu", e => {
+        e.target.matches("img") && e.preventDefault()
+    })
+
     // 클라이언트와 서버의 웹소켓 통신을 가능하도록 연결시켜주는 부분이다.
     // router.py에서의 url과 일치하도록 해 주어야한다.
     var web_socket = new WebSocket('ws://' + window.location.host + '/abalone/<str:username>/');
