@@ -691,7 +691,7 @@ def honor_view(request, username):
     evlsucclist = GameHistory.objects.filter(knightId__in=[5,6,7,10]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
         .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')
 
-    evlleaderlist = GameHistory.objects.filter(knightId__in=[5, 6, 7, 10]).values('username').annotate(
+    evlleaderlist = GameHistory.objects.filter(knightId__in=[5, 6]).values('username').annotate(
         totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y'))) \
         .annotate(
         winrate=Cast('wincnt', output_field=FloatField()) / Cast('totalcnt', output_field=FloatField()) * 100).order_by(
