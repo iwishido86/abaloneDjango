@@ -698,6 +698,7 @@ def honor_view(request, username):
         '-wincnt', '-winrate')
 
 
+
     #print(honorlist)
     context = {
         'username':username,
