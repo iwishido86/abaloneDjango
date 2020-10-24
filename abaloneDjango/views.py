@@ -449,6 +449,7 @@ def knight_election_view(request, username):
 
     gamemap = [
         [2, 3, 3, 4, 4],
+        [2, 3, 3, 4, 4],
         [3, 4, 4, 5, 5],
         [3, 4, 4, 5, 5],
         [3, 4, 4, 5, 5],
@@ -493,7 +494,7 @@ def knight_election_view(request, username):
         election.username = username
 
         election.save()
-        maxelectioncnt = gamemap[game.joinUserCnt-7][int(expeditionseq)-1]
+        maxelectioncnt = gamemap[game.joinUserCnt-6][int(expeditionseq)-1]
 
         # 최종결과 저장
         electioncnt = Election.objects.filter(gameId=gameid,expeditionSeq=expeditionseq).count()
