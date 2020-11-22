@@ -46,7 +46,9 @@
     </style>
 
     <script type="text/javascript">
-
+    document.addEventListener("contextmenu", e => {
+        e.target.matches("img") && e.preventDefault()
+    })
     </script>
 
 
