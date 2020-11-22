@@ -36,6 +36,7 @@ class User(models.Model):
     readyYn = models.CharField(default='N',max_length=1)
     hosuYn = models.CharField(default='N', max_length=1, help_text="호수의여신")
     assinKnightId = models.IntegerField(default=0, help_text="지정카드")
+    gradeNum = models.IntegerField(default=0, help_text="등급번호")
 
 
 class GameHistory(models.Model):

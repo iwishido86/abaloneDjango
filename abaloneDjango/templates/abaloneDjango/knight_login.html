@@ -4,12 +4,12 @@
 <form method="post">
     {% csrf_token %}
     <table><tr><td>
-    <table>
-    {{ form.as_table }}
+        <table>
+            {{ form.as_table }}
         </table>
     </td>
         <td>
-            <input type="submit" value="로 그 인"  class="knight_login_btn2" width="100%"/>
+            <input type="submit" value="로 그 인"  class="knight_login_btn" width="60%"/>
         </td>
         </tr>
         </table>
@@ -17,22 +17,11 @@
 
 </form>
 
-<a href="{% url 'knight_auto_view' username='기수' %}"><input class="knight_login_btn" value="김기수" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='홍종' %}"><input class="knight_login_btn" value="김홍종" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='승훈' %}"><input class="knight_login_btn" value="도승훈" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='현이' %}"><input class="knight_login_btn" value="문현이" type="button" width="100%"/></a>
-<br>
-<a href="{% url 'knight_auto_view' username='원대' %}"><input class="knight_login_btn" value="서원대" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='용수' %}"><input class="knight_login_btn" value="안용수" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='현철' %}"><input class="knight_login_btn" value="오현철" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='경진' %}"><input class="knight_login_btn" value="이경진" type="button" width="100%"/></a>
-<br>
-<a href="{% url 'knight_auto_view' username='상림' %}"><input class="knight_login_btn" value="이상림" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='승규' %}"><input class="knight_login_btn" value="이승규" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='주윤발' %}"><input class="knight_login_btn" value="주윤정" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='원영' %}"><input class="knight_login_btn" value="최원영" type="button" width="100%"/></a>
-<br>
-<a href="{% url 'knight_auto_view' username='윤경' %}"><input class="knight_login_btn" value="허윤경" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='인의' %}"><input class="knight_login_btn" value="홍인의" type="button" width="100%"/></a>
-<a href="{% url 'knight_auto_view' username='팀장님' %}"><input class="knight_login_btn" value="팀장님" type="button" width="100%"/></a>
+
+    {% for user in userlist.all %}
+        <a href="{% url 'knight_auto_view' username=user.username %}"><input class="knight_login_btn2" value="{{ user.username}}" type="button" width="100%"
+        style="background-image:url('/static/grade_{{ user.gradeNum }}.png'"/></a>
+
+
+    {% endfor %}
 {% endblock body %}

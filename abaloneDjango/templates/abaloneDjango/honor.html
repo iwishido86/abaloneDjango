@@ -18,27 +18,7 @@
     </style>
 
     <script type="text/javascript">
-    // 클라이언트와 서버의 웹소켓 통신을 가능하도록 연결시켜주는 부분이다.
-    // router.py에서의 url과 일치하도록 해 주어야한다.
-    var web_socket = new WebSocket('ws://' + window.location.host + '/abalone/<str:username>/');
 
-    // onmessage는 counsumers에서 보내는 메세지를 받는 부분이다.
-    web_socket.onmessage = function(e) {
-        var data = JSON.parse(e.data);
-        var message = data['message'];
-
-        if (message == 'assin') {
-            document.location.href = "{% url 'mycard_view' username=username %}";
-        } else if (message == 'game_succ') {
-            document.location.href = "{% url 'knight_select_view' username=username %}";
-        } else if (message == 'game_fail') {
-            document.location.href = "{% url 'knight_select_view' username=username %}";
-        } else if (message == 'game_complete') {
-            document.location.href = "{% url 'knight_select_view' username=username %}";
-        } else if (message == 'init') {
-            document.location.href = "{% url 'knight_select_view' username=username %}";
-        }
-    };
     </script>
 
 
@@ -46,13 +26,16 @@
 <body>
 {% include "./top_menu.html" %}
 <form method="post">
+
+    * 전체<br>
     <table>
         <tr>
             <td width="100">기사</td>
 
-            <td width="100">승리</td>
-            <td width="100">원정</td>
-            <td width="100">승률</td>
+            <td width="80">승리</td>
+            <td width="80">원정</td>
+            <td width="80">승률</td>
+            <td width="80">랭크</td>
         </tr>
     {% for honor in honorlist.all %}
         <tr>
@@ -60,6 +43,7 @@
             <td>{{ honor.wincnt }}</td>
             <td>{{ honor.totalcnt }}</td>
             <td>{{ honor.winrate|stringformat:"d%%" }}</td>
+            <td>{{ honor.rankscore|stringformat:"d" }}</td>
         </tr>
     {% endfor %}
     </table>
@@ -110,7 +94,7 @@
         <tr>
             <td width="100">기사</td>
 
-            <td width="100">패배</td>
+            <td width="100">승리</td>
             <td width="100">원정</td>
             <td width="100">승률</td>
         </tr>

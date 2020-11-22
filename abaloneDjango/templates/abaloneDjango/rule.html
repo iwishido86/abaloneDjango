@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>아발론 온라인 코어뱅킹</title>
     <style>
-        td{
+        .card{
+            width : 90px;
             border-color: #9d9d00;
-            border-size: 2px;
+            background-color: #9d9d9d;
             vertical-align: middle;
+            line-height: 100px;
             margin: 5px auto 5px auto;
         }
     </style>
@@ -16,20 +18,16 @@
     <script type="text/javascript">
     </script>
 
-
 </head>
 <body>
 {% include "./top_menu.html" %}
-{% load static %}
-원정 준비중 ...
-</BR>
-원정 리더가 시작하면 카드가 배정됩니다.
-</BR>
+<form method="post">
+    {% csrf_token %}
+    안내잼
+    {{ form.as_p }}
+    {% load static %}
 
-<a href="{% url 'mycard_view' username=username %}"><input value="새로고침" type="button" width="100%"/></a>
-</BR>
-참가완료 : {{ joinusercnt }} 명 , 준비완료 : {{ readyusercnt }}  명
-</BR>
 
+</form>
 </body>
 </html>

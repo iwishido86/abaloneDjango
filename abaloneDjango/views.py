@@ -1,6 +1,6 @@
 from random import random, randint
 
-from django.db.models import Q, Max, Count, FloatField
+from django.db.models import Q, Max, Count, FloatField, F
 from django.db.models.functions import Cast
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -77,6 +77,18 @@ def knight_select_view(request, username):
     return render(request, template_name, context)
 
 
+
+def rule_view(request, username):
+    template_name = 'abaloneDjango/rule.html'
+
+    context = {
+        'username':username,
+    }
+
+    return render(request, template_name, context)
+
+
+
 def base_view(request):
     template_name = 'abaloneDjango/base.html'
     return render(request, template_name)
@@ -101,13 +113,16 @@ def knight_login_view(request):
             user.save()
 
             return HttpResponseRedirect(
-                '/knight_select/%s' % form.cleaned_data['username']
+                '/mycard/%s' % form.cleaned_data['username']
             )
     else:
         form = UserLoginForm()
 
+    userlist = User.objects.all().order_by('-joinYn','gradeNum')  # 추가
+
     context = {
-        'form': form
+        'form': form,
+        'userlist': userlist,  # 추가
     }
     return render(request, template_name, context)
 
@@ -124,7 +139,7 @@ def knight_auto_view(request,username):
     user.save()
 
     return HttpResponseRedirect(
-        '/knight_select/%s' % username
+        '/mycard/%s' % username
     )
 
 
@@ -178,7 +193,7 @@ def mycard_view(request,username):
     return render(request, template_name, context)
 
 
-def start_view(request):
+def start_view(request,username):
     template_name = 'abaloneDjango/start.html'
 
     userlist = User.objects.all().order_by('-joinYn')  # 추가
@@ -191,6 +206,7 @@ def start_view(request):
     gamelist = Game.objects.filter(completeYn='N')  # 추가
 
     context = {
+        'username': username,  # 추가
         'userlist': userlist,  # 추가
         'joinusercnt': joinusercnt,  # 추가
         'readyusercnt': readyusercnt,  # 추가
@@ -199,7 +215,7 @@ def start_view(request):
     return render(request, template_name, context)
 
 
-def assin_view(request):
+def assin_view(request,username):
     template_name = 'abaloneDjango/start.html'
     weight = 0
     assinnum = 0
@@ -211,7 +227,7 @@ def assin_view(request):
     gamecnt = Game.objects.filter(completeYn='N').count()
 
     if gamecnt > 0 :
-        return render(request, 'abaloneDjango/error.html', {'errstr': '아직 진행중인 게임이 있습니다. 게임을 취소하고 다시 시도하십시오'} )
+        return render(request, 'abaloneDjango/error.html', {'username': username, 'errstr': '아직 진행중인 게임이 있습니다. 게임을 취소하고 다시 시도하십시오'} )
 
     gameIdObj = Game.objects.all().order_by('-gameId')
 
@@ -270,33 +286,35 @@ def assin_view(request):
 
         assineduserq.add( Q(username=assinedusername) , assineduserq.OR)
 
-    return HttpResponseRedirect('/start/' )
+    return HttpResponseRedirect('/start/%s/' % username)
 
 
-def delete_view(request,username):
+
+def delete_view(request,username, targetusername):
     template_name = 'abaloneDjango/start.html'
 
-    user = get_object_or_404(User, username=username)
+    targetuser = get_object_or_404(User, username=targetusername)
 
-    user.delete()
+    targetuser.joinYn = 'N'
 
-    return HttpResponseRedirect('/start/' )
+    targetuser.save()
+
+    return HttpResponseRedirect('/start/%s/' % username)
 
 
-def join_view(request,username):
+def join_view(request,username, targetusername):
     template_name = 'abaloneDjango/start.html'
 
-    user = get_object_or_404(User, username=username)
+    targetuser = get_object_or_404(User, username=targetusername)
 
-    user.username = username
-    user.joinYn = 'Y'
+    targetuser.joinYn = 'Y'
 
-    user.save()
+    targetuser.save()
 
-    return HttpResponseRedirect('/start/' )
+    return HttpResponseRedirect('/start/%s/' %username)
 
 
-def hosu_view(request,username):
+def hosu_view(request,username, targetusername):
     template_name = 'abaloneDjango/start.html'
 
     # 카드 세팅 초기화
@@ -306,17 +324,15 @@ def hosu_view(request,username):
         user.hosuYn = 'N'
         user.save()
 
-    user = get_object_or_404(User, username=username)
+    targetuser = get_object_or_404(User, username=targetusername)
+    targetuser.hosuYn = 'Y'
 
-    user.username = username
-    user.hosuYn = 'Y'
+    targetuser.save()
 
-    user.save()
-
-    return HttpResponseRedirect('/start/' )
+    return HttpResponseRedirect('/start/%s/'%username )
 
 
-def init_view(request):
+def init_view(request, username):
     template_name = 'abaloneDjango/start.html'
 
     userlist = User.objects.all()
@@ -334,10 +350,10 @@ def init_view(request):
         selectknight.delete()
 
 
-    return HttpResponseRedirect('/start/')
+    return HttpResponseRedirect('/start/%s/' %username)
 
 
-def game_complete_view(request,gameid):
+def game_complete_view(request,gameid, username):
     template_name = 'abaloneDjango/start.html'
 
     userlist = User.objects.all()
@@ -353,10 +369,10 @@ def game_complete_view(request,gameid):
 
     game.save()
 
-    return HttpResponseRedirect('/start/' )
+    return HttpResponseRedirect('/start/%s/'%username )
 
 
-def game_succ_view(request,gameid):
+def game_succ_view(request,gameid, username):
     template_name = 'abaloneDjango/start.html'
 
     userlist = User.objects.filter(joinYn='Y',assinKnightId__gt=0)
@@ -387,10 +403,12 @@ def game_succ_view(request,gameid):
 
     game.save()
 
-    return HttpResponseRedirect('/start/' )
+    rank_set_view(request, gameid, username)
+
+    return HttpResponseRedirect('/start/%s/' % username )
 
 
-def game_fail_view(request,gameid):
+def game_fail_view(request,gameid, username):
     template_name = 'abaloneDjango/start.html'
 
     userlist = User.objects.filter(joinYn='Y')
@@ -421,10 +439,45 @@ def game_fail_view(request,gameid):
 
     game.save()
 
-    return HttpResponseRedirect('/start/' )
+    rank_set_view(request,gameid, username)
+
+    return HttpResponseRedirect('/start/%s/' % username )
+
+def rank_set_view(request, gameid, username):
+    template_name = 'abaloneDjango/start.html'
+
+    rank = GameHistory.objects.values('username') \
+        .annotate(wincnt=Count('username', Q(winYn='Y'))) \
+        .aggregate(maxcnt=Max('wincnt'))
+
+    honorlist = GameHistory.objects.values('username') \
+        .annotate(totalcnt=Count('username')) \
+        .annotate(wincnt=Count('username', Q(winYn='Y'))) \
+        .annotate(winrate=Cast('wincnt', output_field=FloatField()) / Cast('totalcnt', output_field=FloatField()) * 100) \
+        .annotate(rankscore=(Cast('wincnt', output_field=FloatField()) * 100 / rank['maxcnt'].__float__()) + Cast('winrate', output_field=FloatField())) \
+        .order_by('-rankscore')
+
+    rankoffset = 1
+    rankoffsetnum = 1
+    for honor in honorlist:
+        user, created = User.objects.get_or_create(
+            username=honor['username']
+        )
+
+        user.gradeNum = rankoffset
+
+        if rankoffsetnum == rankoffset:
+            rankoffset = rankoffset + 1
+            rankoffsetnum = 1
+        else:
+            rankoffsetnum = rankoffsetnum + 1
+
+        user.save()
 
 
-def expeditionSeq_ini_view(request,gameid):
+
+
+def expeditionSeq_ini_view(request,gameid, username):
     template_name = 'abaloneDjango/start.html'
 
     game = get_object_or_404(Game, gameId=gameid)
@@ -441,7 +494,7 @@ def expeditionSeq_ini_view(request,gameid):
     election = Election.objects.filter(gameId=gameid, expeditionSeq__gte=expeditionSeq)
     election.delete()
 
-    return HttpResponseRedirect('/start/' )
+    return HttpResponseRedirect('/start/%s/' % username )
 
 
 def knight_election_view(request, username):
@@ -683,8 +736,16 @@ def hosu_select_view(request, username):
 def honor_view(request, username):
     template_name = 'abaloneDjango/honor.html'
 
-    honorlist = GameHistory.objects.values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
-        .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')
+    rank = GameHistory.objects.values('username') \
+        .annotate(wincnt=Count('username', Q(winYn='Y'))) \
+        .aggregate(maxcnt=Max('wincnt'))
+
+    honorlist = GameHistory.objects.values('username') \
+        .annotate(totalcnt=Count('username')) \
+        .annotate(wincnt=Count('username', Q(winYn='Y'))) \
+        .annotate(winrate=Cast('wincnt', output_field=FloatField()) / Cast('totalcnt', output_field=FloatField()) * 100) \
+        .annotate(rankscore=(Cast('wincnt', output_field=FloatField()) * 100 / rank['maxcnt'].__float__()) + Cast('winrate', output_field=FloatField())) \
+        .order_by('-rankscore')
 
     goodsucclist = GameHistory.objects.filter(knightId__in=[1,2]).values('username').annotate(totalcnt=Count('username')).annotate(wincnt=Count('username', Q(winYn='Y')))\
         .annotate(winrate=Cast('wincnt', output_field=FloatField())/Cast('totalcnt', output_field=FloatField()) * 100 ).order_by('-wincnt','-winrate')

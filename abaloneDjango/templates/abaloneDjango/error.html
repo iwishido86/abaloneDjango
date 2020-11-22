@@ -21,7 +21,8 @@
 
 </head>
 <body>
-<a href="{% url 'start_view' %}"><input value="원정리더" type="button" align="right" width="100%"/></a>
+{% include "./top_menu.html" %}
+<a href="{% url 'start_view' username=username %}"><input value="원정리더" type="button" align="right" width="100%"/></a>
 <form method="post">
     {% csrf_token %}
     에레메세지 : {{ errstr }}
